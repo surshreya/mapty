@@ -184,3 +184,9 @@ a:visited {
 .twitter-link:active {
   color: var(--color-light--2);
 }
+
+#map {
+  flex: 1;
+  height: 100%;
+  background-color: var(--color-light--1);
+}
