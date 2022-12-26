@@ -85,6 +85,7 @@ class App {
     //Attach Events
     form.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener("change", this._toggleElevationField);
+    containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
   }
 
   /**
@@ -126,7 +127,6 @@ class App {
    * @param {event} mapE
    */
   _showForm(mapE) {
-    console.log("clicked");
     this.#mapEvent = mapE;
     form.classList.remove("hidden");
     inputDistance.focus();
@@ -232,6 +232,11 @@ class App {
       .openPopup();
   }
 
+  /**
+   * Render the list of all workouts submitted
+   * @param {Object} workout
+   */
+
   _renderWorkout(workout) {
     let html = `<li class="workout workout--${workout.workoutType}" data-id=${
       workout.id
@@ -294,6 +299,30 @@ class App {
     form.style.display = "none";
     form.classList.add("hidden");
     setTimeout(() => (form.style.display = "grid"), 1000);
+  }
+
+  /**
+   * Move to MAP to focus on the marker clicked form the list
+   * @param {Event Object} e
+   * @returns
+   */
+  _moveToPopup(e) {
+    if (!this.#map) return;
+
+    const workoutEl = e.target.closest(".workout");
+
+    if (!workoutEl) return;
+
+    const workout = this.#workouts.find(
+      (workout) => workout.id === workoutEl.dataset.id
+    );
+
+    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
   }
 }
 
